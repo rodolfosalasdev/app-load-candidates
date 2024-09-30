@@ -30,9 +30,9 @@ export class FormCandidatesComponent {
 
   // Usar um form reactive para melhor controle de validação
   protected form = this.formBuilder.group({
-    name: [null, [Validators.required, Validators.minLength(3)]],
-    surname: [null, [Validators.required, Validators.minLength(3)]],
-    file: [null, Validators.required],
+    name: ['', [Validators.required, Validators.minLength(3)]],
+    surname: ['', [Validators.required, Validators.minLength(3)]],
+    file: ['', Validators.required],
   });
 
   private params: ICreateCandidate = {
@@ -107,5 +107,9 @@ export class FormCandidatesComponent {
 
   private resetForm(): void {
     this.form.reset();
+  }
+
+  public get candidateForm() {
+    return this.form;
   }
 }
