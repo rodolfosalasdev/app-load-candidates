@@ -1,0 +1,26 @@
+.form-candidates {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+
+    .form-card {
+        width: 70%;
+        margin: 1rem;
+
+        .form-title {
+            margin: 1rem;
+        }
+
+        .form {
+            margin: 2rem 0 1rem 1rem;
+
+            .mr {
+                margin-right: 1rem;
+            }
+
+            .field-size {
+                width: 300px;
+            }
+        }
+    }
+}

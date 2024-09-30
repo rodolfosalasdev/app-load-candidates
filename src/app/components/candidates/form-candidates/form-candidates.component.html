@@ -1,0 +1,25 @@
+<div class="form-candidates">
+    <mat-card class="form-card">
+        <mat-card-title class="form-title">Create Candidate</mat-card-title>
+        <form class="form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+            <mat-form-field class="mr field-size" appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name"/>
+            </mat-form-field>
+
+            <mat-form-field class="mr field-size" appearance="outline">
+                <mat-label>Surname</mat-label>
+                <input matInput formControlName="surname"/>
+            </mat-form-field>
+
+            <button type="button" class="mr" mat-raised-button color="primary" (click)="fileInput.click()">Select file</button>
+            <input type="file" formControlName="file" #fileInput (change)="onFileSelected($event)" accept=".xls, .xlsx, .numbers" hidden/>
+            @if(file) {
+                <span>{{ file?.name }}</span>
+            }
+
+            <br>
+            <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid">SUBMIT</button>
+        </form>
+    </mat-card>
+</div>
