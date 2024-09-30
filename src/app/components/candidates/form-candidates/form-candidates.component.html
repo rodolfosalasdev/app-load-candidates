@@ -1,7 +1,7 @@
 <div class="form-candidates">
     <mat-card class="form-card">
         <mat-card-title class="form-title">Create Candidate</mat-card-title>
-        <form class="form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+        <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
             <mat-form-field class="mr field-size" appearance="outline">
                 <mat-label>Name</mat-label>
                 <input matInput formControlName="name"/>

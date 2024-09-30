@@ -1,17 +1,14 @@
-import { Component, inject } from "@angular/core";
-import {
-  FormBuilder,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from "@angular/forms";
-import { MatCardModule } from "@angular/material/card";
-import { MatInputModule } from "@angular/material/input";
-import { MatButtonModule } from "@angular/material/button";
-import { CommonModule } from "@angular/common";
-import { CreateCandidateService } from "../../../_services/create-candidate.service";
-import * as XLSX from "xlsx";
-import { first, retry } from "rxjs";
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
+import { first, retry } from 'rxjs';
+import * as XLSX from 'xlsx';
+
+import { ICreateCandidate } from '../../../_interfaces/create-candidate.interface';
+import { CreateCandidateService } from '../../../_services/create-candidate.service';
 
 @Component({
   selector: "app-form-candidates",
@@ -28,87 +25,87 @@ import { first, retry } from "rxjs";
   styleUrl: "./form-candidates.component.css",
 })
 export class FormCandidatesComponent {
-  public params: any = {
-    name: "",
-    surname: "",
-    file: {
-      seniority: "",
-      years: 0,
-      availability: false,
-    },
-  };
-  public selectedFile!: File;
   private formBuilder = inject(FormBuilder);
   private service = inject(CreateCandidateService);
 
+  // Usar um form reactive para melhor controle de validação
   protected form = this.formBuilder.group({
     name: [null, [Validators.required, Validators.minLength(3)]],
     surname: [null, [Validators.required, Validators.minLength(3)]],
     file: [null, Validators.required],
   });
 
-  private clearFormValues(): void {
-    this.form.controls["name"].setValue(null);
-    this.form.controls["surname"].setValue(null);
-    this.form.controls["file"].setValue(null);
-  }
+  private params: ICreateCandidate = {
+    name: '',
+    surname: '',
+    file: {
+      seniority: '',
+      years: 0,
+      availability: false,
+    },
+  };
+  
+  public selectedFile!: File;
 
   public onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       this.selectedFile = input.files[0];
+      this.processExcelFile(this.selectedFile);
     }
-    this.createPayloadToExcel();
   }
 
-  public onSubmit(formValues: any): void {
-    this.params.name = formValues?.name;
-    this.params.surname = formValues?.surname;
-
-    this.createCandidates();
+  public onSubmit(): void {
+    if (this.form.valid) {
+      this.params.name = this.form.get('name')?.value || '';
+      this.params.surname = this.form.get('surname')?.value || '';
+      
+      this.createCandidates();
+    } else {
+      console.error('Form is invalid');
+    }
   }
 
-  private createCandidates() {
+  private createCandidates(): void {
     this.service
       .createCandidate(this.params)
-      .pipe(first(), retry(2))
+      .pipe(first(), retry(2)) // Melhor controle de operações assíncronas
       .subscribe({
         next: (response) => {
-          console.log("POST: ", response);
-          this.clearFormValues();
+          console.log('Candidate created successfully:', response);
+          this.resetForm();
         },
         error: (error) => {
-          console.error("Error fetching candidates: ", error);
-        },
-        complete: () => {
-          console.log("POST request completed.");
+          console.error('Error creating candidate:', error);
         },
       });
   }
 
-  private createPayloadToExcel() {
+  private processExcelFile(file: File): void {
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = new Uint8Array(e.target?.result as ArrayBuffer);
-      const workbook = XLSX.read(data, { type: "array" });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
+      const workbook = XLSX.read(data, { type: 'array' });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const excelData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-      excelData.forEach((item: any) => {
-        if (item[1]) {
-          if (typeof item[1] === "string") {
-            this.params.file.seniority = item[1];
-          }
-          if (typeof item[1] === "number") {
-            this.params.file.years = item[1];
-          }
-          if (typeof item[1] === "boolean") {
-            this.params.file.availability = item[1];
-          }
-        }
-      });
+      this.extractExcelData(excelData);
     };
-    reader.readAsArrayBuffer(this.selectedFile);
+    reader.readAsArrayBuffer(file);
+  }
+
+  private extractExcelData(excelData: any[]): void {
+    excelData.forEach((row: any) => {
+      if (row[1]) {
+        const value = row[1];
+        if (typeof value === 'string') this.params.file.seniority = value;
+        if (typeof value === 'number') this.params.file.years = value;
+        if (typeof value === 'boolean') this.params.file.availability = value;
+      }
+    });
+  }
+
+  private resetForm(): void {
+    this.form.reset();
   }
 }

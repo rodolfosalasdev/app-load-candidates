@@ -12,7 +12,7 @@ export class CreateCandidateService {
 
   constructor(private readonly http: HttpClient) { }
 
-  public createCandidate(params: any): Observable<ICreateCandidate> {
+  public createCandidate(params: ICreateCandidate): Observable<ICreateCandidate> {
     return this.http.post<ICreateCandidate>(this.url, params);
   }
 }
