@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -9,6 +9,7 @@ import * as XLSX from 'xlsx';
 
 import { ICreateCandidate } from '../../../_interfaces/create-candidate.interface';
 import { CreateCandidateService } from '../../../_services/create-candidate.service';
+import { ICandidatesListResponse } from '../../../_interfaces/candidates-liste-response.interface';
 
 @Component({
   selector: "app-form-candidates",
@@ -24,11 +25,18 @@ import { CreateCandidateService } from '../../../_services/create-candidate.serv
   templateUrl: "./form-candidates.component.html",
   styleUrl: "./form-candidates.component.css",
 })
-export class FormCandidatesComponent {
+export class FormCandidatesComponent implements OnInit {
   private formBuilder = inject(FormBuilder);
   private service = inject(CreateCandidateService);
+  public candidates: ICandidatesListResponse[] = [];
 
-  // Usar um form reactive para melhor controle de validação
+  ngOnInit() {
+    this.service.candidates$.subscribe(candidates => {
+      this.candidates = candidates;
+    });
+    this.service.getCandidates().subscribe();
+  }
+
   protected form = this.formBuilder.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     surname: ['', [Validators.required, Validators.minLength(3)]],
@@ -64,12 +72,13 @@ export class FormCandidatesComponent {
     } else {
       console.error('Form is invalid');
     }
+    this.service.getCandidates().subscribe()
   }
 
   private createCandidates(): void {
     this.service
       .createCandidate(this.params)
-      .pipe(first(), retry(2)) // Melhor controle de operações assíncronas
+      .pipe(first(), retry(2))
       .subscribe({
         next: (response) => {
           console.log('Candidate created successfully:', response);
