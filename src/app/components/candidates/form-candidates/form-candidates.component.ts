@@ -53,7 +53,7 @@ export class FormCandidatesComponent implements OnInit {
     },
   };
   
-  public selectedFile!: File;
+  public selectedFile!: any;
 
   public onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -80,13 +80,14 @@ export class FormCandidatesComponent implements OnInit {
       .createCandidate(this.params)
       .pipe(first(), retry(2))
       .subscribe({
-        next: (response) => {
-          console.log('Candidate created successfully:', response);
-          this.resetForm();
+        next: () => {
+          this.resetForm(); 
+          this.selectedFile = null
         },
         error: (error) => {
           console.error('Error creating candidate:', error);
         },
+        complete: () => console.log('Compmlite')
       });
   }
 

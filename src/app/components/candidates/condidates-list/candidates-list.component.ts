@@ -4,11 +4,12 @@ import { MatTableModule } from '@angular/material/table';
 
 import { ICandidatesListResponse } from '../../../_interfaces/candidates-liste-response.interface';
 import { CreateCandidateService } from '../../../_services/create-candidate.service';
+import { AvailabilityPipe } from '../../../_pipes/availability-pipe.pipe';
 
 @Component({
   selector: 'app-candidates-list',
   standalone: true,
-  imports: [MatTableModule, CommonModule],
+  imports: [MatTableModule, CommonModule, AvailabilityPipe],
   templateUrl: './candidates-list.component.html',
   styleUrl: './candidates-list.component.css'
 })

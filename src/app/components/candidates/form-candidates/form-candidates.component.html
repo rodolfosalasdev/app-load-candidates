@@ -13,7 +13,7 @@
             </mat-form-field>
 
             <button type="button" class="mr" mat-raised-button color="primary" (click)="fileInput.click()">Select file</button>
-            <input type="file" formControlName="file" #fileInput (change)="onFileSelected($event)" accept=".xls, .xlsx, .numbers" hidden/>
+            <input type="file" formControlName="file" id="fileUpload" #fileInput (change)="onFileSelected($event)" accept=".xls, .xlsx, .numbers" hidden/>
             @if(selectedFile) {
                 <span>{{ selectedFile.name }}</span>
             }
