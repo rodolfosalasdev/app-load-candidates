@@ -2,9 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 
-import { ICandidatesListResponse } from '../../../_interfaces/candidates-liste-response.interface';
-import { CreateCandidateService } from '../../../_services/create-candidate.service';
 import { AvailabilityPipe } from '../../../_pipes/availability-pipe.pipe';
+import { CreateCandidateService } from '../../../_services/create-candidate.service';
 
 @Component({
   selector: 'app-candidates-list',
@@ -15,12 +14,10 @@ import { AvailabilityPipe } from '../../../_pipes/availability-pipe.pipe';
 })
 export class CandidatesListComponent implements OnInit {
   private service = inject(CreateCandidateService);
-  public candidates: ICandidatesListResponse[] = [];
   public displayedColumns: string[] = ['name', 'seniority', 'years', 'availability'];
+  public candidates = this.service.candidatesSignal;
 
   ngOnInit(): void {
-    this.service.candidates$.subscribe(candidates => {
-      this.candidates = candidates;
-    });
+    this.service.getCandidates();
   }
 }

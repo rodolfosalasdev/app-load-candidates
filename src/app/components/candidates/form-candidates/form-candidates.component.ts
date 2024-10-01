@@ -1,15 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
-import { first, retry } from 'rxjs';
 import * as XLSX from 'xlsx';
 
 import { ICreateCandidate } from '../../../_interfaces/create-candidate.interface';
 import { CreateCandidateService } from '../../../_services/create-candidate.service';
-import { ICandidatesListResponse } from '../../../_interfaces/candidates-liste-response.interface';
 
 @Component({
   selector: "app-form-candidates",
@@ -25,17 +23,9 @@ import { ICandidatesListResponse } from '../../../_interfaces/candidates-liste-r
   templateUrl: "./form-candidates.component.html",
   styleUrl: "./form-candidates.component.css",
 })
-export class FormCandidatesComponent implements OnInit {
+export class FormCandidatesComponent {
   private formBuilder = inject(FormBuilder);
   private service = inject(CreateCandidateService);
-  public candidates: ICandidatesListResponse[] = [];
-
-  ngOnInit() {
-    this.service.candidates$.subscribe(candidates => {
-      this.candidates = candidates;
-    });
-    this.service.getCandidates().subscribe();
-  }
 
   protected form = this.formBuilder.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
@@ -67,28 +57,23 @@ export class FormCandidatesComponent implements OnInit {
     if (this.form.valid) {
       this.params.name = this.form.get('name')?.value || '';
       this.params.surname = this.form.get('surname')?.value || '';
-      
       this.createCandidates();
     } else {
       console.error('Form is invalid');
     }
-    this.service.getCandidates().subscribe()
   }
 
   private createCandidates(): void {
-    this.service
-      .createCandidate(this.params)
-      .pipe(first(), retry(2))
-      .subscribe({
-        next: () => {
-          this.resetForm(); 
-          this.selectedFile = null
-        },
-        error: (error) => {
-          console.error('Error creating candidate:', error);
-        },
-        complete: () => console.log('Compmlite')
-      });
+    this.service.createCandidate(this.params).subscribe({
+      next: () => {
+        this.resetForm();
+        this.selectedFile = null;
+        this.service.getCandidates();
+      },
+      error: (error) => {
+        console.error('Error creating candidate:', error);
+      },
+    });
   }
 
   private processExcelFile(file: File): void {

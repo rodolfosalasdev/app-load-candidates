@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 import { urlConfig } from '../_config/url-config';
@@ -11,24 +11,22 @@ import { ICandidatesListResponse } from './../_interfaces/candidates-liste-respo
 })
 export class CreateCandidateService {
   private url = urlConfig;
-  private candidatesSubject = new BehaviorSubject<ICandidatesListResponse[]>([]);
-  public candidates$ = this.candidatesSubject.asObservable();
+  // private candidatesSubject = new BehaviorSubject<ICandidatesListResponse[]>([]);
+  // public candidates$ = this.candidatesSubject.asObservable();
+
+  //new
+  public candidatesSignal = signal<ICandidatesListResponse[]>([]);
 
   constructor(private readonly http: HttpClient) { }
 
-  public getCandidates(): Observable<ICandidatesListResponse[]> {
-    return this.http.get<ICandidatesListResponse[]>(this.url.candidatesListUrl).pipe(
-      tap(candidates => this.candidatesSubject.next(candidates))
-    );
+  public getCandidates() {
+    return this.http.get<ICandidatesListResponse[]>(this.url.candidatesListUrl)
+      .subscribe((candidates) => {
+        this.candidatesSignal.set(candidates);
+      });
   }
 
   public createCandidate(params: ICreateCandidate): Observable<ICreateCandidate> {
-    return this.http.post<ICreateCandidate>(this.url.createCandidateUrl, params).pipe(
-      tap(() => this.refreshCandidates())
-    );
-  }
-
-  private refreshCandidates() {
-    this.getCandidates().subscribe();
+    return this.http.post<ICreateCandidate>(this.url.createCandidateUrl, params);
   }
 }

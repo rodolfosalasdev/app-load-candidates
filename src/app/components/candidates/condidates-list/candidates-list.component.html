@@ -1,7 +1,7 @@
-@if (candidates) {
+@if (candidates()) {
   <div class="candidate-list">
     <div class="candidates-table">
-      <table mat-table [dataSource]="candidates" class="mat-elevation-z8">
+      <table mat-table [dataSource]="candidates()" class="mat-elevation-z8">
         
           <!-- Position Column -->
           <ng-container matColumnDef="name">
