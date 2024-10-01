@@ -1,4 +1,7 @@
 <div class="candidates">
-    <app-form-candidates />
+    <app-form-candidates 
+        (formOutput)="formValidate($event)"
+        (fileOutput)="processExcelFile($event)"
+    />
     <app-candidates-list />
 </div>
