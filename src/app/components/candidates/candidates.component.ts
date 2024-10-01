@@ -15,7 +15,7 @@ import { CreateCandidateService } from '../../_services/create-candidate.service
 })
 export class CandidatesComponent {
   private service = inject(CreateCandidateService);
-
+  private file!: any
   private params: ICreateCandidate = {
     name: '',
     surname: '',
@@ -38,7 +38,11 @@ export class CandidatesComponent {
 
   private createCandidates(): void {
     this.service.createCandidate(this.params).subscribe({
-      next: () => this.service.getCandidates(),
+      next: () => {
+        this.service.getCandidates();
+        this.file = null;
+        this.params.file.availability = false;
+      },
       error: (error) => {
         console.error('Error creating candidate:', error);
       },
@@ -46,6 +50,7 @@ export class CandidatesComponent {
   }
 
   public processExcelFile(file: File): void {
+    this.file = file;
     const reader = new FileReader();
     reader.onload = (e) => {
       const data = new Uint8Array(e.target?.result as ArrayBuffer);
@@ -55,7 +60,7 @@ export class CandidatesComponent {
 
       this.extractExcelData(excelData);
     };
-    reader.readAsArrayBuffer(file);
+    reader.readAsArrayBuffer(this.file);
   }
 
   private extractExcelData(excelData: any[]): void {

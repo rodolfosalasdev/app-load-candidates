@@ -45,6 +45,7 @@ export class FormCandidatesComponent {
   public onSubmit(): void {
     this.formOutput.emit(this.form);
     this.resetForm();
+    this.selectedFile = null;    
   }
 
   private resetForm(): void {
