@@ -25,6 +25,9 @@ describe('CandidatesComponent', () => {
     httpMock = TestBed.inject(HttpTestingController);
     candidatesService = TestBed.inject(CandidatesService);
   });
+  afterEach(() => {
+    candidatesService.clearCandidates();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -38,15 +41,14 @@ describe('CandidatesComponent', () => {
       file: [new File([], 'test.xlsx', { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), Validators.required]
     });
   
-    const createCandidatesSpy = jest.spyOn(component as any, 'createCandidates'); // Espiona a função privada
+    const createCandidatesSpy = jest.spyOn(component as any, 'createCandidates');
   
-    component.formValidate(validForm); // Chama a função que deveria validar e criar candidato
+    component.formValidate(validForm);
   
-    expect(createCandidatesSpy).toHaveBeenCalled(); // Verifica se a função foi chamada
+    expect(createCandidatesSpy).toHaveBeenCalled();
   });
 
   it('should call next inside createCandidates and execute subsequent actions', () => {
-    // Simula a resposta do service.createCandidate
     const createCandidateSpy = jest.spyOn(candidatesService, 'createCandidate')
       .mockReturnValue(of({
       name: '',
@@ -59,10 +61,8 @@ describe('CandidatesComponent', () => {
     }));
     const getCandidatesSpy = jest.spyOn(candidatesService, 'getCandidates');
   
-    // Chama a função privada createCandidates diretamente
     component['createCandidates']();
   
-    // Verifica se o next foi chamado e executou as ações esperadas
     expect(createCandidateSpy).toHaveBeenCalledWith(component['params']);
     expect(getCandidatesSpy).toHaveBeenCalled();
     expect(component['file']).toBeNull();

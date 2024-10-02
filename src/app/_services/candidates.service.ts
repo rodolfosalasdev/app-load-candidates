@@ -11,10 +11,7 @@ import { ICreateCandidate } from '../_interfaces/create-candidate.interface';
 })
 export class CandidatesService {
   private url = urlConfig;
-  // private candidatesSubject = new BehaviorSubject<ICandidatesListResponse[]>([]);
-  // public candidates$ = this.candidatesSubject.asObservable();
 
-  //new
   public candidatesSignal = signal<ICandidatesListResponse[]>([]);
 
   constructor(private readonly http: HttpClient) { }
@@ -28,5 +25,9 @@ export class CandidatesService {
 
   public createCandidate(params: ICreateCandidate): Observable<ICreateCandidate> {
     return this.http.post<ICreateCandidate>(this.url.createCandidateUrl, params);
+  }
+
+  public clearCandidates(): void {
+    this.candidatesSignal.set([]);
   }
 }

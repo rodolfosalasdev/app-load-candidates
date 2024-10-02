@@ -28,8 +28,8 @@ export class CandidatesComponent {
 
   public formValidate(form: FormGroup) {
     if (form.valid) {
-      this.params.name = form.get('name')?.value || '';
-      this.params.surname = form.get('surname')?.value || '';
+      this.params.name = form.get('name')?.value;
+      this.params.surname = form.get('surname')?.value;
       this.createCandidates();
     }
   }
