@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CandidatesService should create a candidate POST 1`] = `"POST"`;
+
+exports[`CandidatesService should create a candidate POST 2`] = `
+{
+  "file": {
+    "availability": true,
+    "seniority": "Senior",
+    "years": 5,
+  },
+  "name": "Rodolfo",
+  "surname": "Salas",
+}
+`;
+
+exports[`CandidatesService should create a candidate POST 3`] = `
+{
+  "file": {
+    "availability": true,
+    "seniority": "Senior",
+    "years": 5,
+  },
+  "name": "Rodolfo",
+  "surname": "Salas",
+}
+`;
+
+exports[`CandidatesService should search for candidates and update the signal 1`] = `"GET"`;
+
+exports[`CandidatesService should search for candidates and update the signal 2`] = `
+[
+  {
+    "availability": true,
+    "name": "Rodolfo",
+    "seniority": "Senior",
+    "surname": "Salas",
+    "years": 5,
+  },
+  {
+    "availability": false,
+    "name": "Larissa",
+    "seniority": "Junior",
+    "surname": "Salas",
+    "years": 1,
+  },
+]
+`;

@@ -49,9 +49,11 @@ describe('CandidatesService', () => {
 
     const req = httpMock.expectOne(urlConfig.candidatesListUrl);
     expect(req.request.method).toBe('GET');
+    expect(req.request.method).toMatchSnapshot();
     req.flush(mockCandidates);
 
     expect(service.candidatesSignal()).toEqual(mockCandidates);
+    expect(service.candidatesSignal()).toMatchSnapshot();
   });
 
   it('should create a candidate POST', () => {
@@ -67,11 +69,14 @@ describe('CandidatesService', () => {
 
     service.createCandidate(mockCandidate).subscribe((candidate) => {
       expect(candidate).toEqual(mockCandidate);
+      expect(candidate).toMatchSnapshot();
     });
 
     const req = httpMock.expectOne(urlConfig.createCandidateUrl);
     expect(req.request.method).toBe('POST');
+    expect(req.request.method).toMatchSnapshot();
     expect(req.request.body).toEqual(mockCandidate);
+    expect(req.request.body).toMatchSnapshot();
     req.flush(mockCandidate);
   });
 });

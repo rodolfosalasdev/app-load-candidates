@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 
-import { AvailabilityPipe } from '../../../_pipes/availability-pipe.pipe';
+import { AvailabilityPipe } from '../../../_pipes/availability.pipe';
 import { CandidatesService } from '../../../_services/candidates.service';
 
 @Component({
