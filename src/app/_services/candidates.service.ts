@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { urlConfig } from '../_config/url-config';
+import { ICandidatesListResponse } from '../_interfaces/candidates-liste-response.interface';
 import { ICreateCandidate } from '../_interfaces/create-candidate.interface';
-import { ICandidatesListResponse } from './../_interfaces/candidates-liste-response.interface';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CreateCandidateService {
+export class CandidatesService {
   private url = urlConfig;
   // private candidatesSubject = new BehaviorSubject<ICandidatesListResponse[]>([]);
   // public candidates$ = this.candidatesSubject.asObservable();

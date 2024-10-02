@@ -4,7 +4,7 @@ import { CandidatesListComponent } from './condidates-list/candidates-list.compo
 import { FormGroup } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { ICreateCandidate } from '../../_interfaces/create-candidate.interface';
-import { CreateCandidateService } from '../../_services/create-candidate.service';
+import { CandidatesService } from '../../_services/candidates.service';
 
 @Component({
   selector: 'app-candidates',
@@ -14,7 +14,7 @@ import { CreateCandidateService } from '../../_services/create-candidate.service
   styleUrl: './candidates.component.css'
 })
 export class CandidatesComponent {
-  private service = inject(CreateCandidateService);
+  private service = inject(CandidatesService);
   private file!: any
   private params: ICreateCandidate = {
     name: '',
