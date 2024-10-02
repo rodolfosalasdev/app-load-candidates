@@ -31,8 +31,6 @@ export class CandidatesComponent {
       this.params.name = form.get('name')?.value || '';
       this.params.surname = form.get('surname')?.value || '';
       this.createCandidates();
-    } else {
-      console.error('Form is invalid');
     }
   }
 
@@ -73,5 +71,4 @@ export class CandidatesComponent {
       }
     });
   }
-
 }
