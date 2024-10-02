@@ -1,4 +1,3 @@
-import { PipeTransform } from '@angular/core';
 import { AvailabilityPipe } from './availability-pipe.pipe';
 
 describe('AvailabilityPipePipe', () => {
