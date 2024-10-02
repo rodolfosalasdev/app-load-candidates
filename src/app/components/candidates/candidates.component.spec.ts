@@ -30,7 +30,7 @@ describe('CandidatesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('deve validar o formulário e chamar a função de criação de candidato se for válido', () => {
+  it('should validate the form and call the candidate creation function if it is valid', () => {
     const formBuilder = new FormBuilder();
     const validForm: FormGroup = formBuilder.group({
       name: ['Rodolfo', Validators.required],
@@ -40,12 +40,12 @@ describe('CandidatesComponent', () => {
   
     const createCandidatesSpy = jest.spyOn(component as any, 'createCandidates'); // Espiona a função privada
   
-    component.formValidate(validForm); // Chama a função que deve validar e criar candidato
+    component.formValidate(validForm); // Chama a função que deveria validar e criar candidato
   
     expect(createCandidatesSpy).toHaveBeenCalled(); // Verifica se a função foi chamada
   });
 
-  it('deve chamar o next dentro de createCandidates e executar as ações subsequentes', () => {
+  it('should call next inside createCandidates and execute subsequent actions', () => {
     // Simula a resposta do service.createCandidate
     const createCandidateSpy = jest.spyOn(candidatesService, 'createCandidate')
       .mockReturnValue(of({
@@ -69,7 +69,7 @@ describe('CandidatesComponent', () => {
     expect(component['params'].file.availability).toBe(false);
   });
   
-  it('não deve chamar a função de criação de candidato se o formulário for inválido', () => {
+  it('should not call the candidate creation function if the form is invalid', () => {
     const formBuilder = new FormBuilder();
     const invalidForm: FormGroup = formBuilder.group({
       name: ['', Validators.required],
@@ -83,7 +83,7 @@ describe('CandidatesComponent', () => {
     expect(createCandidatesSpy).not.toHaveBeenCalled();
   });
   
-  it('deve lidar com erros ao criar candidatos', () => {
+  it('should handle errors when creating candidates', () => {
     jest.spyOn(candidatesService, 'createCandidate').mockReturnValue(throwError(() => new Error('Erro ao criar candidato')));
 
     const errorSpy = jest.spyOn(console, 'error');
@@ -92,7 +92,7 @@ describe('CandidatesComponent', () => {
     expect(errorSpy).toHaveBeenCalledWith('Error creating candidate:', expect.any(Error));
   });
 
-  it('deve processar o arquivo Excel e extrair os dados corretamente', () => {
+  it('should process the Excel file and extract the data correctly', () => {
     const file = new File([], 'test.xlsx', { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const readAsArrayBufferSpy = jest.spyOn(FileReader.prototype, 'readAsArrayBuffer').mockImplementation(function (this: FileReader) {
       const event = { target: { result: new ArrayBuffer(8) } } as ProgressEvent<FileReader>;
@@ -106,7 +106,7 @@ describe('CandidatesComponent', () => {
     expect(extractExcelDataSpy).toHaveBeenCalled();
   });
 
-  it('deve extrair os dados corretos do arquivo Excel', () => {
+  it('should extract the correct data from the Excel file', () => {
     const excelData = [
       ['seniority', 'senior'],
       ['years', 5],

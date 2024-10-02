@@ -69,7 +69,7 @@ describe('FormCandidatesComponent', () => {
     expect(component.fileOutput.emit).toHaveBeenCalledWith(file);
   });
 
-  it('deve emitir o formulário preenchido no "formOutput" e resetar o formulário após o submit', () => {
+  it('should output the completed form in "formOutput" and reset the form after submitting', () => {
     const formOutputSpy = jest.spyOn(component.formOutput, 'emit');
 
     component.candidateForm.setValue({

@@ -27,7 +27,7 @@ describe('CandidatesService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('deve buscar os candidatos e atualizar o signal', () => {
+  it('should search for candidates and update the signal', () => {
     const mockCandidates: ICandidatesListResponse[] = [
       {
         name: 'Rodolfo',
@@ -45,19 +45,16 @@ describe('CandidatesService', () => {
       },
     ];
 
-    // Chama o método que faz a requisição HTTP
     service.getCandidates();
 
-    // Simula a resposta da chamada GET
     const req = httpMock.expectOne(urlConfig.candidatesListUrl);
     expect(req.request.method).toBe('GET');
-    req.flush(mockCandidates); // Retorna os dados simulados
+    req.flush(mockCandidates);
 
-    // Verifica se o signal foi atualizado corretamente
     expect(service.candidatesSignal()).toEqual(mockCandidates);
   });
 
-  it('deve criar um candidato via POST', () => {
+  it('should create a candidate POST', () => {
     const mockCandidate: ICreateCandidate = { 
       name: 'Rodolfo',
       surname: 'Salas',
@@ -68,15 +65,13 @@ describe('CandidatesService', () => {
       }
     };
 
-    // Chama o método que faz a requisição POST
     service.createCandidate(mockCandidate).subscribe((candidate) => {
       expect(candidate).toEqual(mockCandidate);
     });
 
-    // Simula a resposta da chamada POST
     const req = httpMock.expectOne(urlConfig.createCandidateUrl);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockCandidate);
-    req.flush(mockCandidate); // Retorna os dados simulados
+    req.flush(mockCandidate);
   });
 });
