@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { first, Observable } from 'rxjs';
+import { catchError, first, Observable, retry, throwError } from 'rxjs';
 
 import { urlConfig } from '../_config/url-config';
 import { ICandidatesListResponse } from '../_interfaces/candidates-liste-response.interface';
@@ -18,7 +18,11 @@ export class CandidatesService {
 
   public getCandidates() {
     return this.http.get<ICandidatesListResponse[]>(this.url.candidatesListUrl)
-      .pipe(first())
+      .pipe(
+        first(),
+        retry(2),
+        catchError(this.handleError)
+      )
       .subscribe((candidates) => {
         this.candidatesSignal.set(candidates);
       });
@@ -26,10 +30,23 @@ export class CandidatesService {
 
   public createCandidate(params: ICreateCandidate): Observable<ICreateCandidate> {
     return this.http.post<ICreateCandidate>(this.url.createCandidateUrl, params)
-      .pipe(first());
+      .pipe(
+        first(),
+        retry(2),
+        catchError(this.handleError)
+      );
   }
 
   public clearCandidates(): void {
     this.candidatesSignal.set([]);
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      console.error('An error occurred:', error.error.message);
+    } else {
+      console.error(`Backend returned code ${error.status}, body was: ${error.error}`);
+    }
+    return throwError(() => new Error('Something bad happened; please try again later.'));
   }
 }
