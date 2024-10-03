@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`AvailabilityPipePipe should return the original value when it is not boolean 1`] = `"other"`;
-
-exports[`AvailabilityPipePipe should return the original value when it is not boolean 2`] = `123`;
-
-exports[`AvailabilityPipePipe should turn \`false\` into "No" 1`] = `"No"`;
-
-exports[`AvailabilityPipePipe should turn \`true\` into "Yes" 1`] = `"Yes"`;
